@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: vogon-poetry-generator
+  description: A code linter that generates unreadable and confusing error messages, much like Vogon poetry.
+  tags:
+    - linter
+    - errors
+  links:
+    - url: https://example.com/docs/vogon-poetry-generator
+      title: Documentation
+      icon: book
+    - url: https://example.com/vogon-poetry-dashboard
+      title: Error Dashboard
+      icon: bug_report
+  annotations:
+    backstage.io/tech-stack: syntax-analysis
+    backstage.io/documentation: 'https://github.com/guide/vogon-poetry-generator'
+spec:
+  type: service
+  lifecycle: beta
+  owner: syntax-team
+  system: code-quality-system
+  dependsOn: []
+  apiConsumedBy: ['component:code-linter']

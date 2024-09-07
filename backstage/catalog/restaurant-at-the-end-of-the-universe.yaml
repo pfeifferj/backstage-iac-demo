@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: restaurant-at-the-end-of-the-universe
+  description: A staging environment that represents the final production build or the last state before failure.
+  tags:
+    - staging
+    - endgame
+  links:
+    - url: https://example.com/docs/restaurant-at-the-end-of-the-universe
+      title: Documentation
+      icon: book
+    - url: https://example.com/end-of-the-universe-dashboard
+      title: Staging Dashboard
+      icon: restaurant
+  annotations:
+    backstage.io/tech-stack: staging-environment
+    backstage.io/documentation: 'https://github.com/guide/restaurant-at-the-end-of-the-universe'
+spec:
+  type: service
+  lifecycle: staging
+  owner: endgame-team
+  system: deployment-system
+  dependsOn: []
+  apiConsumedBy: ['component:final-deployment']

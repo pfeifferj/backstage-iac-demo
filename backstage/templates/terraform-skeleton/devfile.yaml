@@ -1,0 +1,82 @@
+schemaVersion: 2.3.0
+metadata:
+  generateName: terraform-dev
+  version: 1.0.0
+  description: A devfile for Terraform development and testing.
+  projectType: Infrastructure-as-Code
+  language: HCL
+  provider: Open Source
+  tags: ['Terraform', 'IaC']
+  displayName: Terraform Development Environment
+  icon: https://www.terraform.io/assets/images/og-image-8b3e4f7d.png
+attributes:
+  .vscode/extensions.json: |
+    {
+      "recommendations": [
+        "hashicorp.terraform"
+      ]
+    }
+  .che/che-theia-plugins.yaml: |
+    - id: hashicorp/terraform/latest
+
+components:
+  - name: terraform-tools
+    container:
+      image: quay.io/pfeifferj/tfdev:latest
+      memoryLimit: 512Mi
+      cpuLimit: "1"
+      mountSources: true
+      volumeMounts:
+        - name: terraform-data
+          path: ${PROJECTS_ROOT}/${{ values.repoName }}/terraform
+
+  - name: terraform-data
+    volume:
+      size: 1Gi
+      ephemeral: true
+
+commands:
+  - id: terraform-init
+    exec:
+      component: terraform-tools
+      commandLine: "terraform init"
+      workingDir: ${PROJECTS_ROOT}/${{ values.repoName }}/terraform
+      group:
+        kind: build
+        isDefault: true
+
+  - id: terraform-plan
+    exec:
+      component: terraform-tools
+      commandLine: "terraform plan"
+      workingDir: ${PROJECTS_ROOT}/${{ values.repoName }}/terraform
+      group:
+        kind: build
+        isDefault: false
+
+  - id: terraform-apply
+    exec:
+      component: terraform-tools
+      commandLine: "terraform apply -auto-approve"
+      workingDir: ${PROJECTS_ROOT}/${{ values.repoName }}/terraform
+      group:
+        kind: build
+        isDefault: false
+
+  - id: terraform-lint
+    exec:
+      component: terraform-tools
+      commandLine: "tflint"
+      workingDir: ${PROJECTS_ROOT}/${{ values.repoName }}/terraform
+      group:
+        kind: build
+        isDefault: false
+
+  - id: generate-docs
+    exec:
+      component: terraform-tools
+      commandLine: "terraform-docs markdown . > ../docs.md"
+      workingDir: ${PROJECTS_ROOT}/${{ values.repoName }}/terraform
+      group:
+        kind: build
+        isDefault: false

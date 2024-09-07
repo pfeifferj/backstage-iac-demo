@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: deep-thought-ai
+  description: AI that answers simple questions with overly complex responses, often more confusing than helpful.
+  tags:
+    - ai
+    - machine-learning
+  links:
+    - url: https://example.com/docs/deep-thought-ai
+      title: Documentation
+      icon: book
+    - url: https://example.com/deep-thought-dashboard
+      title: Deep Thought Dashboard
+      icon: brain
+  annotations:
+    backstage.io/tech-stack: ai-deep-learning
+    backstage.io/documentation: 'https://github.com/guide/deep-thought-ai'
+spec:
+  type: service
+  lifecycle: experimental
+  owner: philosophy-team
+  system: knowledge-engine
+  dependsOn: []
+  apiConsumedBy: ['component:question-analyzer']

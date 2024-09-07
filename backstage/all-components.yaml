@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: hitchhicker-componenets
+  description: A collection of all hitchhicker APIs
+spec:
+  targets:
+    - ./catalog/42-resolver.yaml
+    - ./catalog/babel-fish-translator.yaml
+    - ./catalog/deep-thought-ai.yaml
+    - ./catalog/dont-panic-service.yaml
+    - ./catalog/heart-of-gold.yaml
+    - ./catalog/infinite-improbability-drive.yaml
+    - ./catalog/restaurant-at-the-end-of-the-universe.yaml
+    - ./catalog/towel-inventory-tracker.yaml
+    - ./catalog/vogon-poetry-generator.yaml
+    - ./catalog/systems.yaml
+    - ./catalog/domains.yaml

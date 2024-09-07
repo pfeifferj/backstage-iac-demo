@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: 42-resolver
+  description: A service that returns "42" as the answer to every query, regardless of the complexity.
+  tags:
+    - resolver
+    - answer
+  links:
+    - url: https://example.com/docs/42-resolver
+      title: Documentation
+      icon: book
+    - url: https://example.com/42-dashboard
+      title: 42 Dashboard
+      icon: help
+  annotations:
+    backstage.io/tech-stack: simple-answer-system
+    backstage.io/documentation: 'https://github.com/guide/42-resolver'
+spec:
+  type: service
+  lifecycle: production
+  owner: answer-team
+  system: answer-engine
+  dependsOn: []
+  apiConsumedBy: ['component:deep-thought-ai']

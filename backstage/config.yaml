@@ -1,0 +1,118 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: app-config-rhdh
+  namespace: rhdh-operator
+data:
+  app-config-rhdh.yaml: |
+    clusterRouterBase: apps-crc.testing
+    logger:
+      level: debug
+    app:
+      title: Red Hat Developer Hub
+    backend:
+      enabled: true 
+      baseUrl: https://rhdh.ocp4-tst.josie.cloud/
+      cors: 
+        origin: ["https://rhdh.ocp4-tst.josie.cloud/"]
+      auth:
+        keys:
+          - secret: ${BACKEND_SECRET} # deprecated but still required by some mechanisms
+    auth:
+      environment: development
+      session:
+        secret: ${RHDH_BACKEND_SECRET}
+      providers: {}
+        # oidc:
+          # production:
+            # clientId: ${AUTH_KEYCLOAK_CLIENT_ID}
+            # clientSecret: ${AUTH_KEYCLOAK_CLIENT_SECRET}
+            # metadataUrl: https://keycloak-keycloak.apps-crc.testing/realms/rhdh/.well-known/openid-configuration
+            # prompt: auto
+            # callbackUrl: https://rhdh.ocp4-tst.josie.cloud/api/auth/oidc/handler/frame
+            # signIn:
+              # resolvers:
+                # - resolver: preferredUsernameMatchingUserEntityName
+                # - resolver: emailMatchingUserEntityProfileEmail
+                # - resolver: emailLocalPartMatchingUserEntityName
+    # signInPage: oidc
+    catalog:
+      import:
+        entityFilename: catalog-info.yaml
+        pullRequestBranchName: backstage-integration
+      rules:
+        - allow:
+            - Component
+            - API
+            - Resource
+            - System
+            - Domain
+            - Location
+            - Template
+      providers:
+        keycloakOrg:
+          production:
+            baseUrl: https://keycloak-keycloak.apps-crc.testing
+            loginRealm: rhdh 
+            realm: rhdh 
+            clientId: ${AUTH_KEYCLOAK_CLIENT_ID}
+            clientSecret: ${AUTH_KEYCLOAK_CLIENT_SECRET}
+            schedule:
+              frequency: { minutes: 30 }
+              timeout: { minutes: 3 }
+              initialDelay: { seconds: 30 }
+        backstageOpenapi:
+          plugins:
+            - catalog
+            - search
+      locations:
+        - type: file
+          target: 'https://github.com/pfeifferj/backstage-iac-demo/blob/main/backstage/all.yaml'
+          rules:
+            - allow: [Template, Component, Location, Resource, API, Domain, System]
+    permission:
+      enabled: true
+      rbac:
+        admin:
+          users:
+            - name: user:default/pfeifferj
+            - name: user:default/guest
+    enabled:
+      keycloak: true
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins-rhdh
+  namespace: rhdh-operator
+data:
+  dynamic-plugins.yaml: |
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic'
+        disabled: false
+        pluginConfig: {}
+---
+apiVersion: rhdh.redhat.com/v1alpha1
+kind: Backstage
+metadata:
+  name: developer-hub
+  namespace: rhdh-operator
+spec:
+  application:
+    appConfig:
+      configMaps:
+        - name: app-config-rhdh
+      mountPath: /opt/app-root/src
+    dynamicPluginsConfigMapName: dynamic-plugins-rhdh
+    extraEnvs:
+      secrets:
+        - name: rhdh-secrets
+    extraFiles:
+      mountPath: /opt/app-root/src
+    replicas: 1
+    route:
+      enabled: true
+  database:
+    enableLocalDb: true

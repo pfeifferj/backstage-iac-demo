@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: hitchhicker-all
+  description: A collection of all hitchhicker entities
+spec:
+  targets:
+    - ./all-components.yaml
+    - ./all-templates.yaml
+    - ./org/groups.yaml

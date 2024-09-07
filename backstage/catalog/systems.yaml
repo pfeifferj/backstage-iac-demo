@@ -1,0 +1,107 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: answer-engine
+  description: A system designed to answer all queries with "42," regardless of the complexity of the question.
+  tags:
+    - resolver
+    - '42'
+  annotations:
+    backstage.io/system-type: resolver
+spec:
+  owner: answer-team
+  domain: infrastructure
+  lifecycle: production
+  components:
+    - 42-resolver
+    - deep-thought-ai
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: observability-system
+  description: A system responsible for monitoring, translating, and analyzing logs, metrics, and error messages across services.
+  tags:
+    - observability
+    - monitoring
+  annotations:
+    backstage.io/system-type: monitoring
+spec:
+  owner: translation-team
+  domain: infrastructure
+  lifecycle: production
+  components:
+    - babel-fish-translator
+    - log-analyzer
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: knowledge-engine
+  description: The system responsible for processing and analyzing deep questions, driven by AI, providing answers that often lead to more questions.
+  tags:
+    - ai
+    - knowledge
+  annotations:
+    backstage.io/system-type: ai-knowledge
+spec:
+  owner: philosophy-team
+  domain: intelligence
+  lifecycle: experimental
+  components:
+    - deep-thought-ai
+    - question-analyzer
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: reliability-system
+  description: A system focused on providing stability and reassurance in infrastructure by monitoring the state of services and ensuring "everything is fine."
+  tags:
+    - reliability
+    - monitoring
+  annotations:
+    backstage.io/system-type: reassurance
+spec:
+  owner: reassurance-team
+  domain: infrastructure
+  lifecycle: production
+  components:
+    - dont-panic-service
+    - incident-response
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: randomness-engine
+  description: A system that drives random and chaotic events within the infrastructure, controlled by the Infinite Improbability Drive.
+  tags:
+    - chaos
+    - randomness
+  annotations:
+    backstage.io/system-type: chaos-engine
+spec:
+  owner: probability-team
+  domain: infrastructure
+  lifecycle: experimental
+  components:
+    - infinite-improbability-drive
+    - chaos-manager
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: deployment-system
+  description: The system responsible for handling the final deployment phases, including staging environments and production rollouts.
+  tags:
+    - deployment
+    - production
+  annotations:
+    backstage.io/system-type: deployment
+spec:
+  owner: endgame-team
+  domain: infrastructure
+  lifecycle: staging
+  components:
+    - restaurant-at-the-end-of-the-universe
+    - final-deployment

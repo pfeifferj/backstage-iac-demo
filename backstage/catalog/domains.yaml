@@ -1,0 +1,29 @@
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: intelligence
+  description: Domain responsible for systems related to AI, machine learning, and knowledge-based decision-making processes.
+  tags:
+    - ai
+    - machine-learning
+    - knowledge
+spec:
+  owner: philosophy-team
+  systems:
+    - deep-thought-ai
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: infrastructure
+  description: Domain responsible for core infrastructure, including systems, networks, and foundational services.
+  tags:
+    - infrastructure
+    - core
+    - systems
+spec:
+  owner: infrastructure-team
+  systems:
+    - answer-engine
+    - randomness-engine
+    - reliability-system

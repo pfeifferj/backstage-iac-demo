@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: towel-inventory-tracker
+  description: Keeps track of essential development resources like version control, build systems, and backups – things you should never leave without.
+  tags:
+    - dev-tools
+    - essentials
+  links:
+    - url: https://example.com/docs/towel-inventory-tracker
+      title: Documentation
+      icon: book
+    - url: https://example.com/towel-inventory-dashboard
+      title: Towel Dashboard
+      icon: inventory
+  annotations:
+    backstage.io/tech-stack: essential-resources
+    backstage.io/documentation: 'https://github.com/guide/towel-inventory-tracker'
+spec:
+  type: service
+  lifecycle: production
+  owner: essentials-team
+  system: resource-management
+  dependsOn: []
+  apiConsumedBy: ['component:resource-manager']

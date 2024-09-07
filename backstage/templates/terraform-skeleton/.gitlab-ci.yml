@@ -1,0 +1,63 @@
+include:
+  - template: Terraform/Base.latest.gitlab-ci.yml
+  - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
+variables:
+  TF_ROOT: terraform
+stages:
+  - build
+  - plan_json
+  - infracost
+build:
+  extends: .terraform:build
+plan_json:
+  stage: plan_json
+  dependencies:
+    - build
+  before_script:
+    - cd ${TF_ROOT}
+    - gitlab-terraform init
+  script:
+    - gitlab-terraform show -json plan.cache > full-plan.json
+  artifacts:
+    paths:
+      - ${TF_ROOT}/full-plan.json
+infracost:
+  stage: infracost
+  image:
+    name: infracost/infracost:ci-0.10
+    entrypoint:
+      - ''
+  dependencies:
+    - plan_json
+  script:
+    - git config --local user.email "user1@opentlc.com"
+    - git config --local user.name "User1 GitLab"
+    - git checkout main
+    - >-
+      find terraform -type f  -name '*.tf' -o -name '*.hcl' -o -name '*.tfvars' |
+      xargs sed -i 's/m5.4xlarge/m5.8xlarge/g'
+    - >-
+      find terraform -type f  -name '*.tf' -o -name '*.hcl' -o -name '*.tfvars' |
+      xargs sed -i 's/t2.micro/t2.medium/g'
+    - |
+      infracost diff --path=${TF_ROOT}/full-plan.json \
+                     --format=json \
+                     --out-file=infracost.json
+    - >-
+      JSON_FILE="infracost.json"
+      MARKDOWN_FILE="cost-report.md"
+      TOTAL_HOURLY_COST=$(jq -r '.totalHourlyCost // "N/A"' "$JSON_FILE")
+      TOTAL_MONTHLY_COST=$(jq -r '.totalMonthlyCost // "N/A"' "$JSON_FILE")
+      DIFF_HOURLY_COST=$(jq -r '.diffTotalHourlyCost // "N/A"' "$JSON_FILE")
+      DIFF_MONTHLY_COST=$(jq -r '.diffTotalMonthlyCost // "N/A"' "$JSON_FILE")
+      TIME_GENERATED=$(jq -r '.timeGenerated // "N/A"' "$JSON_FILE")
+      RESOURCES=$(jq -r '.projects[0].breakdown.resources[] | "- **\(.name)**: $ \(.monthlyCost)/month"' "$JSON_FILE")
+    - echo -e "## Report Generated $TIME_GENERATED\n## Total Hourly Cost\n\$${TOTAL_HOURLY_COST}\n\#\# Total Monthly Cost\n\$${TOTAL_MONTHLY_COST}\n## Diff Total Hourly Cost\n\$${DIFF_HOURLY_COST}\n## Diff Total Monthly Cost\n\$${DIFF_MONTHLY_COST}\n## Resource Breakdown\n$RESOURCES" > "$MARKDOWN_FILE"
+    - cat "$MARKDOWN_FILE"
+    - git add "$MARKDOWN_FILE"
+    - git commit -m "Add cost report for $(date +'%Y-%m-%d')"
+    - git push https://gitlab-ci-token:${GROUP_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+  variables:
+    INFRACOST_API_KEY: $INFRACOST_API_KEY
+    GITLAB_TOKEN: $GITLAB_TOKEN
+      

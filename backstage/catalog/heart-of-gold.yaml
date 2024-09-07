@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: heart-of-gold
+  description: Repository and CI/CD pipeline for experimental, high-risk projects that require thinking outside the box.
+  tags:
+    - cicd
+    - experimentation
+  links:
+    - url: https://example.com/docs/heart-of-gold
+      title: Documentation
+      icon: book
+    - url: https://example.com/heart-of-gold-pipeline
+      title: CI/CD Pipeline
+      icon: rocket
+  annotations:
+    backstage.io/tech-stack: continuous-delivery
+    backstage.io/documentation: 'https://github.com/guide/heart-of-gold'
+spec:
+  type: service
+  lifecycle: alpha
+  owner: gold-team
+  system: experimental-pipelines
+  dependsOn: []
+  apiConsumedBy: ['component:improbability-drive']

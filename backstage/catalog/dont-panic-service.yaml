@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dont-panic-service
+  description: Service status page that reassures users everything is fine, even when it might not be.
+  tags:
+    - status
+    - reliability
+  links:
+    - url: https://example.com/docs/dont-panic-service
+      title: Documentation
+      icon: book
+    - url: https://example.com/dont-panic
+      title: Status Dashboard
+      icon: dashboard
+  annotations:
+    backstage.io/tech-stack: reassurance-tech
+    backstage.io/documentation: 'https://github.com/guide/dont-panic-service'
+spec:
+  type: service
+  lifecycle: production
+  owner: reassurance-team
+  system: reliability-system
+  dependsOn: []
+  apiConsumedBy: ['component:incident-response']

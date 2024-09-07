@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: infinite-improbability-drive
+  description: Handles extremely improbable events in the infrastructure, often with unpredictable results.
+  tags:
+    - improbability
+    - chaos
+  links:
+    - url: https://example.com/docs/infinite-improbability-drive
+      title: Documentation
+      icon: book
+    - url: https://example.com/improbability-dashboard
+      title: Improbability Dashboard
+      icon: dashboard
+  annotations:
+    backstage.io/tech-stack: quantum-entanglement
+    backstage.io/documentation: 'https://github.com/guide/infinite-improbability-drive'
+spec:
+  type: service
+  lifecycle: experimental
+  owner: probability-team
+  system: randomness-engine
+  dependsOn: []
+  apiConsumedBy: ['component:chaos-manager']

@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: babel-fish-translator
+  description: Translates logs, metrics, and error messages into any language or format, including alien dialects.
+  tags:
+    - translation
+    - observability
+  links:
+    - url: https://example.com/docs/babel-fish-translator
+      title: Documentation
+      icon: book
+    - url: https://example.com/babel-fish
+      title: Babel Fish Interface
+      icon: translate
+  annotations:
+    backstage.io/tech-stack: natural-language-processing
+    backstage.io/documentation: 'https://github.com/guide/babel-fish-translator'
+spec:
+  type: service
+  lifecycle: beta
+  owner: translation-team
+  system: observability-system
+  dependsOn: []
+  apiConsumedBy: ['component:log-analyzer']

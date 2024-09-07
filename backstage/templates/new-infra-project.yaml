@@ -1,0 +1,195 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: terraform-project-template
+  title: Create a Terraform project for AWS
+  description: Create a starter terraform project for provisioning AWS resources, including compute, database, and data type options
+  tags:
+    - terraform
+    - aws
+    - graviton
+spec:
+  owner: cloud-team
+  type: infrastructure
+
+  parameters:
+    - title: Provide information about the new component
+      required:
+        - orgName
+        - repoName
+        - owner
+        - system
+      properties:
+        orgName:
+          title: Organization Name
+          type: string
+        repoName:
+          title: Repository Name
+          type: string
+          maxLength: 16
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+          ui:autofocus: true
+          ui:help: 'Must be alphanumeric, 1-16 characters, starting with a letter'
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for
+        owner:
+          title: Owner
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Group
+                - User
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - System
+    - title: Provide information about the new component
+      required:
+        - instanceType
+        - databaseType
+        - securityGroupType
+        - dataType
+        - location
+      properties:
+        instanceType:
+          title: Compute Instance Type (AWS Graviton)
+          type: string
+          enum:
+            - t4g.micro
+            - t4g.small
+            - t4g.medium
+          description: Select the Graviton instance type
+        databaseType:
+          title: Database Type
+          type: string
+          enum:
+            - db.t4g.micro
+            - db.t4g.small
+            - db.t4g.medium
+            - db.t4g.large
+          description: Choose the database size based on instance type
+        securityGroupType:
+          title: Security Group Type
+          type: string
+          enum:
+            - internal
+            - public
+          description: Configure security group for internal or public access
+        dataType:
+          title: Data Type
+          type: string
+          enum:
+            - customer_data
+            - employee_data
+            - public_data
+          enumNames:
+            - customer data
+            - employee data
+            - public data
+          description: Select the type of data being processed
+        location:
+          title: AWS Region
+          type: string
+          enum:
+            - eu-central-1
+            - us-east-1
+            - eu-central-2
+          enumNames:
+            - Frankfurt
+            - Virginia
+            - Zurich
+          description: Choose the AWS region for your infrastructure.
+          ui:options:
+            conditional:
+              dataType: public_data
+              allowedValues:
+                - eu-central-1
+                - us-east-1
+                - eu-central-2
+              defaultValues: eu-central-2
+      dependencies:
+        dataType:
+          allOf:
+            - if:
+                properties:
+                  dataType:
+                    const: public_data
+              then:
+                properties:
+                  location:
+                    enum:
+                      - eu-central-1
+                      - us-east-1
+                      - eu-central-2
+                    enumNames:
+                      - Frankfurt
+                      - Virginia
+                      - Zurich
+            - if:
+                properties:
+                  dataType:
+                    const: customer_data
+              then:
+                properties:
+                  location:
+                    enum:
+                      - eu-central-2
+                    enumNames:
+                      - Zurich
+  steps:
+    - id: generateTerraform
+      name: Generating Terraform Configuration
+      action: fetch:template
+      input:
+        url: ./terraform-skeleton
+        values:
+          projectName: ${{ parameters.repoName }}
+          instanceType: ${{ parameters.instanceType }}
+          databaseType: ${{ parameters.databaseType }}
+          securityGroupType: ${{ parameters.securityGroupType }}
+          dataType: ${{ parameters.dataType }}
+          region: ${{ parameters.location }}
+          orgName: ${{ parameters.orgName }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: api
+          description: ${{ parameters.description }}
+          sourceControl: gitlab-gitlab.apps.cluster-vxdd5.vxdd5.sandbox1858.opentlc.com
+
+    - id: publish
+      name: Publishing Terraform Project to GitLab
+      action: publish:gitlab
+      input:
+        repoUrl: gitlab-gitlab.apps.cluster-vxdd5.vxdd5.sandbox1858.opentlc.com?owner=devconf&repo=${{ parameters.repoName }}
+        description: Terraform project for ${{ parameters.repoName }}
+        defaultBranch: main
+        projectVariables:
+          - key: 'INFRACOST_API_KEY'
+            value: ''
+            protected: false
+            masked: true
+          - key: 'AWS_ACCESS_KEY_ID'
+            value: ''
+            protected: false
+            masked: true
+          - key: 'AWS_SECRET_ACCESS_KEY'
+            value: ''
+            protected: false
+            masked: true
+
+  output:
+    links:
+      - title: Open the Terraform Repository in GitLab
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open the Catalog Info Component
+        icon: catalog
+        entityRef: ${{ steps.publish.output.entityRef }}

@@ -1,0 +1,113 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: answer-team
+  description: The team responsible for resolving all queries with the answer "42."
+  tags:
+    - answer
+    - '42'
+  annotations:
+    backstage.io/team-name: answer-team
+spec:
+  type: team
+  parent: engineering
+  children: []
+  members:
+    - john.doe
+    - jane.smith
+  owner: answer-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: translation-team
+  description: The team responsible for translating logs, metrics, and error messages into different languages and formats using the Babel Fish Translator.
+  tags:
+    - translation
+    - observability
+  annotations:
+    backstage.io/team-name: translation-team
+spec:
+  type: team
+  parent: engineering
+  children: []
+  members:
+    - alice.wonderland
+    - bob.builder
+  owner: translation-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: philosophy-team
+  description: The team behind Deep Thought AI, responsible for pondering over questions and providing complex answers to simple queries.
+  tags:
+    - ai
+    - philosophy
+  annotations:
+    backstage.io/team-name: philosophy-team
+spec:
+  type: team
+  parent: engineering
+  children: []
+  members:
+    - arthur.dent
+    - ford.prefect
+  owner: philosophy-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: reassurance-team
+  description: The team behind the Don't Panic Service, dedicated to maintaining calm by always reporting that "everything is fine."
+  tags:
+    - reliability
+    - reassurance
+  annotations:
+    backstage.io/team-name: reassurance-team
+spec:
+  type: team
+  parent: engineering
+  children: []
+  members:
+    - zaphod.beeblebrox
+    - trillian.astronaut
+  owner: reassurance-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: probability-team
+  description: The team responsible for managing the Infinite Improbability Drive and dealing with chaotic, improbable events.
+  tags:
+    - probability
+    - chaos
+  annotations:
+    backstage.io/team-name: probability-team
+spec:
+  type: team
+  parent: engineering
+  children: []
+  members:
+    - random.person
+    - improbable.event
+  owner: probability-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: endgame-team
+  description: The team responsible for managing the final stages of deployments, leading to the ultimate production state or failure.
+  tags:
+    - deployment
+    - staging
+  annotations:
+    backstage.io/team-name: endgame-team
+spec:
+  type: team
+  parent: engineering
+  children: []
+  members:
+    - final.boss
+    - ultimate.dev
+  owner: endgame-team
